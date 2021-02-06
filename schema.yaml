@@ -1,0 +1,245 @@
+openapi: 3.0.1
+info:
+  title: Docker Download Manager API
+  description: 'This is the api documentation for the Docker Download Manager server.
+
+
+    For autentication, you can use the `authorization` header or just pass an argument named `key` in the url.'
+  license:
+    name: MIT License
+    url: https://github.com/G4brym/docker-download-manager/blob/master/LICENSE
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Docker Download Manager
+  url: https://github.com/G4brym/docker-download-manager
+servers:
+- url: https://yourserver.com/api/v1
+tags:
+- name: Files
+  description: Everything about your files
+paths:
+  /:
+    get:
+      tags:
+      - Files
+      summary: Health check for the server and all time download count
+      operationId: getHealth
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  downloads:
+                    type: integer
+                    example: 123
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  /download/:
+    post:
+      tags:
+      - Files
+      summary: Create and schedule a new download
+      operationId: createDownload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Download'
+        required: true
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  files:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Download'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  /download/{hash}/:
+    get:
+      tags:
+      - Files
+      summary: Get bulk download status for a given list of hash's
+      operationId: singleStatus
+      parameters:
+      - name: hash
+        in: path
+        description: Hash of the file to retry
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  file:
+                    $ref: '#/components/schemas/Download'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  /download/{hash}/retry/:
+    post:
+      tags:
+      - Files
+      summary: Retry a single failed download
+      operationId: retrySingleDownload
+      parameters:
+      - name: hash
+        in: path
+        description: Hash of the file to retry
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  /download/retry/:
+    post:
+      tags:
+      - Files
+      summary: Retry all failed downloads
+      operationId: retryDownloads
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  /download/status/:
+    post:
+      tags:
+      - Files
+      summary: Get bulk download status for a given list of hash's
+      operationId: bulkStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    example: 28442cc268a2f308e49782188ef77752
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  files:
+                    type: object
+                    properties:
+                      28442cc268a2f308e49782188ef77752:
+                        $ref: '#/components/schemas/Download'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Missing authorization key
+  schemas:
+    Download:
+      type: object
+      properties:
+        hash:
+          type: string
+          example: 28442cc268a2f308e49782188ef77752
+        name:
+          type: string
+          example: myfile.mp4
+        path:
+          type: string
+          example: local_folder/123/
+        url:
+          type: string
+          example: http://google.com/file.mp4
+        headers:
+          type: object
+          example:
+            Referer: http://google.com
+          writeOnly: true
+        completed:
+          type: boolean
+          example: false
+          readOnly: true
+        failed:
+          type: integer
+          example: 2
+          readOnly: true
+        retries:
+          type: integer
+          example: 5
+          readOnly: true
+  securitySchemes:
+    tokenHeader:
+      type: apiKey
+      in: header
+      name: authorization
+    tokenQuery:
+      type: apiKey
+      in: query
+      name: authorization
+security:
+  - tokenHeader: []
+  - tokenQuery: []
