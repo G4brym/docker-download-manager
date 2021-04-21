@@ -1,0 +1,456 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Download Manager API",
+    "description": "This is the api documentation for the Docker Download Manager server\n\nFor authentication, you must send the `authorization` header",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/v1/files/count/": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Get the total files downloaded (also works as an health checker)",
+        "operationId": "file_count_api_v1_files_count__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/files/": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Create and schedule a new download",
+        "operationId": "file_download_api_v1_files__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Files",
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DownloadDTOIn"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response File Download Api V1 Files  Post",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DownloadDTOOut"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/files/{hash}/": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Get download status for a single file",
+        "operationId": "file_status_api_v1_files__hash___get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Hash",
+              "type": "string"
+            },
+            "name": "hash",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadDTOOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/files/{hash}/retry/": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Retry a single failed download",
+        "operationId": "file_retry_api_v1_files__hash__retry__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Hash",
+              "type": "string"
+            },
+            "name": "hash",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/files/retry/": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Retry all failed downloads",
+        "operationId": "file_retry_all_api_v1_files_retry__post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/files/status/": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Get bulk download status for a given list of files",
+        "operationId": "file_status_bulk_api_v1_files_status__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Files",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadStatusDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DownloadDTOIn": {
+        "title": "DownloadDTOIn",
+        "required": [
+          "name",
+          "path",
+          "url",
+          "headers"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "headers": {
+            "title": "Headers",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DownloadDTOOut": {
+        "title": "DownloadDTOOut",
+        "required": [
+          "hash",
+          "name",
+          "path",
+          "url",
+          "failed",
+          "retries",
+          "completed",
+          "creation_date"
+        ],
+        "type": "object",
+        "properties": {
+          "hash": {
+            "title": "Hash",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "failed": {
+            "title": "Failed",
+            "type": "integer"
+          },
+          "retries": {
+            "title": "Retries",
+            "type": "integer"
+          },
+          "completed": {
+            "title": "Completed",
+            "type": "boolean"
+          },
+          "creation_date": {
+            "title": "Creation Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "completion_date": {
+            "title": "Completion Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "headers": {
+            "title": "Headers",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DownloadStatusDTO": {
+        "title": "DownloadStatusDTO",
+        "required": [
+          "files"
+        ],
+        "type": "object",
+        "properties": {
+          "files": {
+            "title": "Files",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DownloadDTOOut"
+            }
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "StatusDTO": {
+        "title": "StatusDTO",
+        "required": [
+          "downloads"
+        ],
+        "type": "object",
+        "properties": {
+          "downloads": {
+            "title": "Downloads",
+            "type": "integer"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "title": "SuccessResponse",
+        "required": [
+          "success"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "title": "Success",
+            "type": "boolean"
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Files",
+      "description": "Everything about your files"
+    }
+  ]
+}
