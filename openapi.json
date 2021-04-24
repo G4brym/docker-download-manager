@@ -54,7 +54,7 @@
           "required": true
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful Response",
             "content": {
               "application/json": {
@@ -155,7 +155,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "202": {
             "description": "Successful Response",
             "content": {
               "application/json": {
@@ -194,7 +194,7 @@
         "summary": "Retry all failed downloads",
         "operationId": "file_retry_all_api_v1_files_retry__post",
         "responses": {
-          "200": {
+          "202": {
             "description": "Successful Response",
             "content": {
               "application/json": {
@@ -270,8 +270,7 @@
         "required": [
           "name",
           "path",
-          "url",
-          "headers"
+          "url"
         ],
         "type": "object",
         "properties": {
@@ -292,7 +291,8 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "default": {}
           }
         }
       },
