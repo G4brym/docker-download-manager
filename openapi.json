@@ -2,7 +2,7 @@
   "openapi": "3.0.2",
   "info": {
     "title": "Download Manager API",
-    "description": "This is the api documentation for the Docker Download Manager server\n\nFor authentication, you must send the `authorization` header",
+    "description": "This is the api documentation for the Download Manager server\n\nFor authentication, you must send the `authorization` header",
     "version": "1.0"
   },
   "paths": {
