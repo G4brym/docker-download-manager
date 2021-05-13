@@ -51,7 +51,7 @@ pre-commit==2.12.1
     # via -r ./common/requirements-dev.txt
 py==1.10.0
     # via pytest
-pydantic==1.7.3
+pydantic==1.7.4
     # via
     #   -r ./common/requirements.txt
     #   fastapi
