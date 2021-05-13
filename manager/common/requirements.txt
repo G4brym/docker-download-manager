@@ -1,5 +1,5 @@
 fastapi==0.63.0
-pydantic==1.7.3
+pydantic==1.7.4
 uvicorn[standard]==0.13.3
 injector==0.18.4
 apscheduler==3.7.0
