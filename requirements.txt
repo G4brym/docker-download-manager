@@ -24,7 +24,7 @@ faker==8.1.0
     # via
     #   factory-boy
     #   pytest-faker
-fastapi==0.63.0
+fastapi==0.65.2
     # via -r ./common/requirements.txt
 filelock==3.0.12
     # via virtualenv
